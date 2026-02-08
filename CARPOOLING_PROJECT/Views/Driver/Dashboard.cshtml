@@ -1,0 +1,200 @@
+@using System
+@using System.Linq
+@model CARPOOLING_PROJECT.ViewModels.DriverDashboardViewModel
+@using CARPOOLING_PROJECT.ViewModels
+@{
+    ViewBag.Title = "Driver Dashboard";
+    var driverName = ViewModelDisplayHelper.CleanName(Model.User?.Name) ?? Model.User?.Email ?? "Driver";
+    var activeRidesCount = Model.ActiveRides?.Count() ?? 0;
+    var pendingRequests = Model.PendingRequests?.Count() ?? 0;
+    var currentBookings = Model.CurrentBookings?.Count() ?? 0;
+    var nextRidePrice = Model.ActiveRides?.FirstOrDefault()?.PricePerSeat;
+}
+
+<div class="dashboard-hero">
+    <div>
+        <span class="eyebrow-badge">Driver Console</span>
+        <h1 class="mb-2">@driverName</h1>
+        <p>Keep riders moving smoothly by responding to requests, managing routes, and tracking every journey.</p>
+        <div class="d-flex gap-2 flex-wrap mt-3">
+            <span class="status-pill @(Model.Driver.IsApproved == true ? "success" : "warning")">
+                @(Model.Driver.IsApproved == true ? "Approved" : "Awaiting approval")
+            </span>
+            <span class="status-pill @(Model.User?.IsActive != false ? "success" : "danger")">
+                @(Model.User?.IsActive != false ? "Account Active" : "Account Banned")
+            </span>
+        </div>
+    </div>
+    <div class="hero-metrics">
+        @if (nextRidePrice.HasValue)
+        {
+            <div class="metric-card">
+                <span>Next Ride Price</span>
+                <strong>@nextRidePrice.Value.ToString("0") PKR</strong>
+            </div>
+        }
+        <div class="metric-card">
+            <span>Active Rides</span>
+            <strong>@activeRidesCount</strong>
+        </div>
+        <div class="metric-card">
+            <span>Pending Requests</span>
+            <strong>@pendingRequests</strong>
+        </div>
+        <div class="metric-card">
+            <span>Bookings</span>
+            <strong>@currentBookings</strong>
+        </div>
+        <div>
+            @if (Model.CanPostRide)
+            {
+                <a class="btn btn-dark mt-3" href="@Url.Action("PostRide", "Driver")">Post New Ride</a>
+            }
+            else
+            {
+                <span class="badge bg-warning text-dark mt-3">Approval required to post rides.</span>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-6">
+        <div class="glass-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Active Rides</h5>
+                <span class="badge bg-light text-dark">@activeRidesCount live</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Seats</th>
+                            <th>Start</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ride in Model.ActiveRides)
+                        {
+                            <tr>
+                                <td>@(ViewModelDisplayHelper.CleanName(ride.Route?.Name) ?? "(unnamed route)")</td>
+                                <td>@($"{ride.AvailableSeats}/{ride.TotalSeats}")</td>
+                                <td>@ride.StartTime.ToString("g")</td>
+                                <td class="text-end">
+                                    @using (Html.BeginForm("CancelRide", "Driver", new { id = ride.RideID }, FormMethod.Post, new { onsubmit = "return confirm('Cancel this ride?');" }))
+                                    {
+                                        <button class="btn btn-danger btn-sm" type="submit">Cancel</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="glass-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Pending Requests</h5>
+                <span class="badge bg-light text-dark">@pendingRequests awaiting</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Passenger</th>
+                            <th>Seats</th>
+                            <th>Fare</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model.PendingRequests)
+                        {
+                            <tr>
+                                <td>@(ViewModelDisplayHelper.CleanName(booking.Passenger?.User?.Name) ?? booking.Passenger?.User?.Email ?? "(no passenger)")</td>
+                                <td>@booking.SeatsRequested</td>
+                                <td>@booking.Fare</td>
+                                <td class="text-nowrap text-end">
+                                    @using (Html.BeginForm("AcceptBooking", "Driver", new { id = booking.BookingID }, FormMethod.Post, new { @class = "d-inline" }))
+                                    {
+                                        <button class="btn btn-success btn-sm mb-1" type="submit">Accept</button>
+                                    }
+                                    @using (Html.BeginForm("RejectBooking", "Driver", new { id = booking.BookingID }, FormMethod.Post, new { @class = "d-inline" }))
+                                    {
+                                        <button class="btn btn-warning btn-sm" type="submit">Reject</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="glass-card mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Current Bookings</h5>
+        <span class="badge bg-light text-dark">@currentBookings in pipeline</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Passenger</th>
+                    <th>Ride</th>
+                    <th>Seats</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in Model.CurrentBookings)
+                {
+                    var statusName = booking.BookingStatu?.StatusName ?? "Unknown";
+                    <tr>
+                        <td>@(ViewModelDisplayHelper.CleanName(booking.Passenger?.User?.Name) ?? booking.Passenger?.User?.Email ?? "(no passenger)")</td>
+                        <td>@(ViewModelDisplayHelper.CleanName(booking.Ride?.Route?.Name) ?? "(unnamed route)")</td>
+                        <td>@booking.SeatsRequested</td>
+                        <td>
+                            <span class="status-pill @(statusName.Equals("Completed", StringComparison.OrdinalIgnoreCase) ? "success" : statusName.Equals("InProgress", StringComparison.OrdinalIgnoreCase) ? "warning" : "success")">
+                                @statusName
+                            </span>
+                        </td>
+                        <td class="text-nowrap">
+                            @if (statusName.Equals("Accepted", StringComparison.OrdinalIgnoreCase))
+                            {
+                                using (Html.BeginForm("MarkReached", "Driver", new { id = booking.BookingID }, FormMethod.Post, new { @class = "d-inline" }))
+                                {
+                                    <button class="btn btn-outline-primary btn-sm mb-1" type="submit">Reached</button>
+                                }
+                            }
+                            @if (statusName.Equals("InProgress", StringComparison.OrdinalIgnoreCase))
+                            {
+                                using (Html.BeginForm("FinishBooking", "Driver", new { id = booking.BookingID }, FormMethod.Post, new { @class = "d-inline" }))
+                                {
+                                    <button class="btn btn-outline-success btn-sm mb-1" type="submit">Finish</button>
+                                }
+                            }
+                            @if (statusName.Equals("Completed", StringComparison.OrdinalIgnoreCase) && booking.PaymentConfirmed != true)
+                            {
+                                using (Html.BeginForm("ConfirmPayment", "Driver", new { id = booking.BookingID }, FormMethod.Post, new { @class = "d-inline" }))
+                                {
+                                    <button class="btn btn-outline-dark btn-sm" type="submit">Cash Received</button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

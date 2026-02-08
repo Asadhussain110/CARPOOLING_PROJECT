@@ -1,0 +1,136 @@
+@using System.Linq
+@model CARPOOLING_PROJECT.ViewModels.AdminDashboardViewModel
+@{
+    ViewBag.Title = "Admin Dashboard";
+    var driverCount = Model.Drivers?.Count ?? 0;
+    var passengerCount = Model.Passengers?.Count ?? 0;
+    var pendingDrivers = Model.Drivers?.Count(d => d.Driver?.IsApproved != true) ?? 0;
+}
+
+<div class="dashboard-hero">
+    <div>
+        <span class="eyebrow-badge">Control Center</span>
+        <h1 class="mb-2">Admin Dashboard</h1>
+        <p>Review activity across the platform, approve new drivers, and keep every trip safe.</p>
+    </div>
+    <div class="hero-metrics">
+        <div class="metric-card">
+            <span>Total Drivers</span>
+            <strong>@driverCount</strong>
+        </div>
+        <div class="metric-card">
+            <span>Pending Drivers</span>
+            <strong>@pendingDrivers</strong>
+        </div>
+        <div class="metric-card">
+            <span>Passengers</span>
+            <strong>@passengerCount</strong>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-6">
+        <div class="glass-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Drivers</h5>
+                    <p class="text-muted mb-0">Approve or moderate drivers instantly.</p>
+                </div>
+                <span class="status-pill warning">Awaiting @pendingDrivers</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>License</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Drivers)
+                        {
+                            <tr>
+                                <td>@item.DisplayName</td>
+                                <td>@item.DisplayEmail</td>
+                                <td>@item.Driver?.LicenseNo</td>
+                                <td>
+                                    <div>@item.ApprovalStatus</div>
+                                    <span class="status-pill @(item.IsBanned ? "danger" : "success")">
+                                        @(item.IsBanned ? "Banned" : "Active")
+                                    </span>
+                                </td>
+                                <td class="text-nowrap">
+                                    @using (Html.BeginForm("ApproveDriver", "Admin", new { id = item.Driver.DriverID }, FormMethod.Post, new { @class = "d-inline" }))
+                                    {
+                                        <button class="btn btn-success btn-sm mb-1" type="submit">Approve</button>
+                                    }
+                                    @using (Html.BeginForm("RejectDriver", "Admin", new { id = item.Driver.DriverID }, FormMethod.Post, new { @class = "d-inline" }))
+                                    {
+                                        <button class="btn btn-warning btn-sm mb-1" type="submit">Reject</button>
+                                    }
+                                    @using (Html.BeginForm("ToggleDriverBan", "Admin", new { id = item.Driver.DriverID }, FormMethod.Post, new { @class = "d-inline" }))
+                                    {
+                                        <button class="btn btn-danger btn-sm" type="submit">@((item.IsBanned ? "Unban" : "Ban"))</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="glass-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Passengers</h5>
+                    <p class="text-muted mb-0">Keep a pulse on all riders and their status.</p>
+                </div>
+                <span class="status-pill success">Trusted riders</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Passengers)
+                        {
+                            <tr>
+                                <td>@item.DisplayName</td>
+                                <td>@item.DisplayEmail</td>
+                                <td>@item.DisplayPhone</td>
+                                <td>
+                                    <span class="status-pill @(item.IsBanned ? "danger" : "success")">
+                                        @(item.IsBanned ? "Banned" : "Active")
+                                    </span>
+                                </td>
+                                <td class="text-nowrap">
+                                    @using (Html.BeginForm("TogglePassengerBan", "Admin", new { id = item.Passenger.PassengerID }, FormMethod.Post))
+                                    {
+                                        <button class="btn btn-sm @(item.IsBanned ? "btn-success" : "btn-danger")" type="submit">
+                                            @(item.IsBanned ? "Unban" : "Ban")
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

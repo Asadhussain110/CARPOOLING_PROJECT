@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c44dda880dd64ce9b9cd3703e14c0668" Name="Diagram1" ZoomLevel="64">
+        <EntityTypeShape EntityType="CarpoolMGSModel.AuditLog" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Booking" Width="1.5" PointX="5.25" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.BookingStatu" Width="1.5" PointX="3" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Driver" Width="1.5" PointX="0.75" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Passenger" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Rating" Width="1.5" PointX="5.25" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Ride" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.RideStatu" Width="1.5" PointX="0.75" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Role" Width="1.5" PointX="1.5" PointY="19.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Route" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Stop" Width="1.5" PointX="3" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.User" Width="1.5" PointX="1.5" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarpoolMGSModel.Vehicle" Width="1.5" PointX="0.75" PointY="22" IsExpanded="true" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Bookings__DropSt__04E4BC85" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Bookings__Passen__02FC7413" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Bookings__Pickup__03F0984C" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Bookings__RideID__02084FDA" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Bookings__Status__07C12930" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Drivers__UserID__5BE2A6F2" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Ratings__DriverI__0E6E26BF" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Rides__DriverID__76969D2E" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Vehicles__Driver__68487DD7" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Passenger__UserI__628FA481" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Ratings__Passeng__0F624AF8" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Ratings__RideID__0D7A0286" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Rides__RouteID__787EE5A0" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Rides__StatusID__7C4F7684" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Rides__VehicleID__778AC167" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Users__RoleID__5535A963" ManuallyRouted="false" />
+        <AssociationConnector Association="CarpoolMGSModel.FK__Stops__RouteID__72C60C4A" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

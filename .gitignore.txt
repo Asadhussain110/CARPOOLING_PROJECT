@@ -1,0 +1,6 @@
+# Visual Studio cache
+.vs/
+*.user
+*.suo
+*.cache
+*.pdb
