@@ -1,0 +1,65 @@
+@{
+    ViewBag.Title = "PakiCarpool";
+}
+
+<section class="landing-hero" aria-labelledby="home-hero-heading">
+    <div class="hero-content">
+        <span class="eyebrow-badge">Introducing PakiCarpool</span>
+        <h1 id="home-hero-heading">Share rides, save more, arrive happier.</h1>
+        <p class="lead">
+            Pakistan's friendly carpooling network that connects trusted drivers and passengers
+            so every commute is safer, smarter, and lighter on the wallet.
+        </p>
+        <div class="cta-buttons">
+            <a class="btn btn-primary btn-lg" href="@Url.Action("Login", "Account")">Login</a>
+            <a class="btn btn-outline-light btn-lg" href="#register-options">Register</a>
+        </div>
+        <div class="hero-stats" aria-label="Platform highlights">
+            <div>
+                <strong>Instant access</strong>
+                <span>Approve drivers, post rides, and book seats in minutes.</span>
+            </div>
+            <div>
+                <strong>Trust first</strong>
+                <span>Built-in approvals and bans keep the community safe.</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="orb orb-lg"></div>
+        <div class="orb orb-md"></div>
+        <div class="orb orb-sm"></div>
+        <div class="hero-card">
+            <h5>Live Snapshot</h5>
+            <ul>
+                <li>Driver approvals in one tap</li>
+                <li>Passengers see available rides instantly</li>
+                <li>Cash payments + ratings for transparency</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<section id="register-options" class="register-showcase glass-card mt-5" aria-labelledby="register-heading">
+    <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4">
+        <div>
+            <span class="eyebrow-badge">Get Started</span>
+            <h2 id="register-heading" class="mb-2">Join the Pakicarpool network today</h2>
+            <p class="text-muted mb-0">
+                Choose how you want to ride. Register as a passenger to book seats instantly or sign up
+                as a driver to share your route and earn.
+            </p>
+        </div>
+        <div class="register-actions">
+            <a href="@Url.Action("RegisterPassenger", "Account")" class="btn btn-primary btn-lg w-100 mb-3">
+                Register as Passenger
+            </a>
+            <a href="@Url.Action("RegisterDriver", "Account")" class="btn btn-outline-secondary btn-lg w-100">
+                Register as Driver
+            </a>
+            <a href="@Url.Action("Login", "Account")" class="btn btn-link w-100 mt-2">Already have an account? Login</a>
+        </div>
+    </div>
+</section>
+

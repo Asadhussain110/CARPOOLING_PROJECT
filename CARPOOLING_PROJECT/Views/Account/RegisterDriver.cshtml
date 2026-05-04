@@ -1,0 +1,66 @@
+@model CARPOOLING_PROJECT.ViewModels.RegisterDriverViewModel
+@{
+    ViewBag.Title = "Driver Registration";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Driver Registration</h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <p class="text-muted">Step 1 of 1. Your driver account will be reviewed by admin before ride posting is enabled.</p>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", autocomplete = "name", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", autocomplete = "email", inputmode = "email", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Phone, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", autocomplete = "tel", inputmode = "tel", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.LicenseNo, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.LicenseNo, new { @class = "form-control", required = "required", aria_describedby = "license-help" })
+                        <small id="license-help" class="text-muted">Use the exact number shown on your official driving license.</small>
+                        @Html.ValidationMessageFor(m => m.LicenseNo, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "new-password", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", autocomplete = "new-password", required = "required" })
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                    </div>
+
+                    <button type="submit" class="btn btn-info w-100 text-white">Register</button>
+                }
+
+                <div class="mt-3 text-center">
+                    Already registered? <a href="@Url.Action("Login", "Account")">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,439 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CarpoolMGSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AuditLogs">
+    <Key>
+      <PropertyRef Name="AuditID" />
+    </Key>
+    <Property Name="AuditID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserID" Type="uniqueidentifier" />
+    <Property Name="Action" Type="nvarchar" MaxLength="500" />
+    <Property Name="Timing" Type="datetime2" Precision="7" />
+  </EntityType>
+  <EntityType Name="Bookings">
+    <Key>
+      <PropertyRef Name="BookingID" />
+    </Key>
+    <Property Name="BookingID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RideID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PassengerID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PickupStopID" Type="uniqueidentifier" />
+    <Property Name="DropStopID" Type="uniqueidentifier" />
+    <Property Name="SeatsRequested" Type="int" Nullable="false" />
+    <Property Name="Fare" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="StatusID" Type="tinyint" Nullable="false" />
+    <Property Name="PaymentConfirmed" Type="bit" />
+    <Property Name="RequestedAt" Type="datetime2" Precision="7" />
+    <Property Name="ConfirmedAt" Type="datetime2" Precision="7" />
+    <Property Name="CompletedAt" Type="datetime2" Precision="7" />
+  </EntityType>
+  <EntityType Name="BookingStatus">
+    <Key>
+      <PropertyRef Name="StatusID" />
+    </Key>
+    <Property Name="StatusID" Type="tinyint" Nullable="false" />
+    <Property Name="StatusName" Type="nvarchar" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Drivers">
+    <Key>
+      <PropertyRef Name="DriverID" />
+    </Key>
+    <Property Name="DriverID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="LicenseNo" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="RatingAvg" Type="decimal" Precision="3" Scale="2" />
+    <Property Name="IsApproved" Type="bit" />
+    <Property Name="CreatedAt" Type="datetime2" Precision="7" />
+  </EntityType>
+  <EntityType Name="Passengers">
+    <Key>
+      <PropertyRef Name="PassengerID" />
+    </Key>
+    <Property Name="PassengerID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RatingAvg" Type="decimal" Precision="3" Scale="2" />
+    <Property Name="CreatedAt" Type="datetime2" Precision="7" />
+  </EntityType>
+  <EntityType Name="Ratings">
+    <Key>
+      <PropertyRef Name="RatingID" />
+    </Key>
+    <Property Name="RatingID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RideID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DriverID" Type="uniqueidentifier" />
+    <Property Name="PassengerID" Type="uniqueidentifier" />
+    <Property Name="Stars" Type="tinyint" Nullable="false" />
+    <Property Name="Feedback" Type="nvarchar" MaxLength="2000" />
+    <Property Name="CreatedAt" Type="datetime2" Precision="7" />
+  </EntityType>
+  <EntityType Name="Rides">
+    <Key>
+      <PropertyRef Name="RideID" />
+    </Key>
+    <Property Name="RideID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DriverID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="VehicleID" Type="uniqueidentifier" />
+    <Property Name="RouteID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="TotalSeats" Type="int" Nullable="false" />
+    <Property Name="AvailableSeats" Type="int" Nullable="false" />
+    <Property Name="StartTime" Type="datetime2" Precision="7" Nullable="false" />
+    <Property Name="PricePerSeat" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="StatusID" Type="tinyint" Nullable="false" />
+    <Property Name="PostedAt" Type="datetime2" Precision="7" />
+    <Property Name="ExpiryAt" Type="datetime2" Precision="7" />
+    <Property Name="CurrentStopID" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="RideStatus">
+    <Key>
+      <PropertyRef Name="StatusID" />
+    </Key>
+    <Property Name="StatusID" Type="tinyint" Nullable="false" />
+    <Property Name="StatusName" Type="nvarchar" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Roles">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="tinyint" Nullable="false" />
+    <Property Name="RoleName" Type="nvarchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Routes">
+    <Key>
+      <PropertyRef Name="RouteID" />
+    </Key>
+    <Property Name="RouteID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" />
+    <Property Name="CreatedAt" Type="datetime2" Precision="7" />
+  </EntityType>
+  <EntityType Name="Stops">
+    <Key>
+      <PropertyRef Name="StopID" />
+    </Key>
+    <Property Name="StopID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RouteID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="LocationName" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="Latitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="Longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+    <Property Name="OrderNo" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="30" />
+    <Property Name="PasswordHash" Type="varbinary(max)" Nullable="false" />
+    <Property Name="RoleID" Type="tinyint" Nullable="false" />
+    <Property Name="CreatedAt" Type="datetime2" Precision="7" />
+    <Property Name="IsActive" Type="bit" />
+  </EntityType>
+  <EntityType Name="Vehicles">
+    <Key>
+      <PropertyRef Name="VehicleID" />
+    </Key>
+    <Property Name="VehicleID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DriverID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Model" Type="nvarchar" MaxLength="200" />
+    <Property Name="PlateNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="Capacity" Type="int" Nullable="false" />
+    <Property Name="Status" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK__Bookings__DropSt__04E4BC85">
+    <End Role="Stops" Type="Self.Stops" Multiplicity="0..1" />
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stops">
+        <PropertyRef Name="StopID" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="DropStopID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Bookings__Passen__02FC7413">
+    <End Role="Passengers" Type="Self.Passengers" Multiplicity="1" />
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Passengers">
+        <PropertyRef Name="PassengerID" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="PassengerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Bookings__Pickup__03F0984C">
+    <End Role="Stops" Type="Self.Stops" Multiplicity="0..1" />
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stops">
+        <PropertyRef Name="StopID" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="PickupStopID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Bookings__RideID__02084FDA">
+    <End Role="Rides" Type="Self.Rides" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rides">
+        <PropertyRef Name="RideID" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="RideID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Bookings__Status__07C12930">
+    <End Role="BookingStatus" Type="Self.BookingStatus" Multiplicity="1" />
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BookingStatus">
+        <PropertyRef Name="StatusID" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="StatusID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Drivers__UserID__5BE2A6F2">
+    <End Role="Users" Type="Self.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Drivers" Type="Self.Drivers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Drivers">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Passenger__UserI__628FA481">
+    <End Role="Users" Type="Self.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Passengers" Type="Self.Passengers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Passengers">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Ratings__DriverI__0E6E26BF">
+    <End Role="Drivers" Type="Self.Drivers" Multiplicity="0..1" />
+    <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Drivers">
+        <PropertyRef Name="DriverID" />
+      </Principal>
+      <Dependent Role="Ratings">
+        <PropertyRef Name="DriverID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Ratings__Passeng__0F624AF8">
+    <End Role="Passengers" Type="Self.Passengers" Multiplicity="0..1" />
+    <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Passengers">
+        <PropertyRef Name="PassengerID" />
+      </Principal>
+      <Dependent Role="Ratings">
+        <PropertyRef Name="PassengerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Ratings__RideID__0D7A0286">
+    <End Role="Rides" Type="Self.Rides" Multiplicity="1" />
+    <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rides">
+        <PropertyRef Name="RideID" />
+      </Principal>
+      <Dependent Role="Ratings">
+        <PropertyRef Name="RideID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Rides__DriverID__76969D2E">
+    <End Role="Drivers" Type="Self.Drivers" Multiplicity="1" />
+    <End Role="Rides" Type="Self.Rides" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Drivers">
+        <PropertyRef Name="DriverID" />
+      </Principal>
+      <Dependent Role="Rides">
+        <PropertyRef Name="DriverID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Rides__RouteID__787EE5A0">
+    <End Role="Routes" Type="Self.Routes" Multiplicity="1" />
+    <End Role="Rides" Type="Self.Rides" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Routes">
+        <PropertyRef Name="RouteID" />
+      </Principal>
+      <Dependent Role="Rides">
+        <PropertyRef Name="RouteID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Rides__StatusID__7C4F7684">
+    <End Role="RideStatus" Type="Self.RideStatus" Multiplicity="1" />
+    <End Role="Rides" Type="Self.Rides" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RideStatus">
+        <PropertyRef Name="StatusID" />
+      </Principal>
+      <Dependent Role="Rides">
+        <PropertyRef Name="StatusID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Rides__VehicleID__778AC167">
+    <End Role="Vehicles" Type="Self.Vehicles" Multiplicity="0..1" />
+    <End Role="Rides" Type="Self.Rides" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vehicles">
+        <PropertyRef Name="VehicleID" />
+      </Principal>
+      <Dependent Role="Rides">
+        <PropertyRef Name="VehicleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Stops__RouteID__72C60C4A">
+    <End Role="Routes" Type="Self.Routes" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Stops" Type="Self.Stops" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Routes">
+        <PropertyRef Name="RouteID" />
+      </Principal>
+      <Dependent Role="Stops">
+        <PropertyRef Name="RouteID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Users__RoleID__5535A963">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+    <End Role="Users" Type="Self.Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Vehicles__Driver__68487DD7">
+    <End Role="Drivers" Type="Self.Drivers" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Vehicles" Type="Self.Vehicles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Drivers">
+        <PropertyRef Name="DriverID" />
+      </Principal>
+      <Dependent Role="Vehicles">
+        <PropertyRef Name="DriverID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CarpoolMGSModelStoreContainer">
+    <EntitySet Name="AuditLogs" EntityType="Self.AuditLogs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Bookings" EntityType="Self.Bookings" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BookingStatus" EntityType="Self.BookingStatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Drivers" EntityType="Self.Drivers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Passengers" EntityType="Self.Passengers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Ratings" EntityType="Self.Ratings" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Rides" EntityType="Self.Rides" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RideStatus" EntityType="Self.RideStatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Routes" EntityType="Self.Routes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Stops" EntityType="Self.Stops" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Vehicles" EntityType="Self.Vehicles" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Bookings__DropSt__04E4BC85" Association="Self.FK__Bookings__DropSt__04E4BC85">
+      <End Role="Stops" EntitySet="Stops" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Bookings__Passen__02FC7413" Association="Self.FK__Bookings__Passen__02FC7413">
+      <End Role="Passengers" EntitySet="Passengers" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Bookings__Pickup__03F0984C" Association="Self.FK__Bookings__Pickup__03F0984C">
+      <End Role="Stops" EntitySet="Stops" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Bookings__RideID__02084FDA" Association="Self.FK__Bookings__RideID__02084FDA">
+      <End Role="Rides" EntitySet="Rides" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Bookings__Status__07C12930" Association="Self.FK__Bookings__Status__07C12930">
+      <End Role="BookingStatus" EntitySet="BookingStatus" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Drivers__UserID__5BE2A6F2" Association="Self.FK__Drivers__UserID__5BE2A6F2">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Drivers" EntitySet="Drivers" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Passenger__UserI__628FA481" Association="Self.FK__Passenger__UserI__628FA481">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Passengers" EntitySet="Passengers" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Ratings__DriverI__0E6E26BF" Association="Self.FK__Ratings__DriverI__0E6E26BF">
+      <End Role="Drivers" EntitySet="Drivers" />
+      <End Role="Ratings" EntitySet="Ratings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Ratings__Passeng__0F624AF8" Association="Self.FK__Ratings__Passeng__0F624AF8">
+      <End Role="Passengers" EntitySet="Passengers" />
+      <End Role="Ratings" EntitySet="Ratings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Ratings__RideID__0D7A0286" Association="Self.FK__Ratings__RideID__0D7A0286">
+      <End Role="Rides" EntitySet="Rides" />
+      <End Role="Ratings" EntitySet="Ratings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Rides__DriverID__76969D2E" Association="Self.FK__Rides__DriverID__76969D2E">
+      <End Role="Drivers" EntitySet="Drivers" />
+      <End Role="Rides" EntitySet="Rides" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Rides__RouteID__787EE5A0" Association="Self.FK__Rides__RouteID__787EE5A0">
+      <End Role="Routes" EntitySet="Routes" />
+      <End Role="Rides" EntitySet="Rides" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Rides__StatusID__7C4F7684" Association="Self.FK__Rides__StatusID__7C4F7684">
+      <End Role="RideStatus" EntitySet="RideStatus" />
+      <End Role="Rides" EntitySet="Rides" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Rides__VehicleID__778AC167" Association="Self.FK__Rides__VehicleID__778AC167">
+      <End Role="Vehicles" EntitySet="Vehicles" />
+      <End Role="Rides" EntitySet="Rides" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Stops__RouteID__72C60C4A" Association="Self.FK__Stops__RouteID__72C60C4A">
+      <End Role="Routes" EntitySet="Routes" />
+      <End Role="Stops" EntitySet="Stops" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Users__RoleID__5535A963" Association="Self.FK__Users__RoleID__5535A963">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Vehicles__Driver__68487DD7" Association="Self.FK__Vehicles__Driver__68487DD7">
+      <End Role="Drivers" EntitySet="Drivers" />
+      <End Role="Vehicles" EntitySet="Vehicles" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

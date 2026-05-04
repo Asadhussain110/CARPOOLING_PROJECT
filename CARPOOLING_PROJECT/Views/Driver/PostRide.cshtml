@@ -1,0 +1,57 @@
+@model CARPOOLING_PROJECT.ViewModels.PostRideViewModel
+@{
+    ViewBag.Title = "Post Ride";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Post a Ride</h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <p class="text-muted mb-3">Fill route details clearly so passengers can compare options faster.</p>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.RouteName, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.RouteName, new { @class = "form-control", placeholder = "e.g., Johar Town to Gulberg", required = "required" })
+                        @Html.ValidationMessageFor(m => m.RouteName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Seats, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Seats, new { @class = "form-control", type = "number", min = "1", max = "6" })
+                        @Html.ValidationMessageFor(m => m.Seats, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.StartTime, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.StartTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local", required = "required" })
+                        @Html.ValidationMessageFor(m => m.StartTime, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.StopsText, new { @class = "form-label" })
+                        @Html.TextAreaFor(m => m.StopsText, 5, 50, new { @class = "form-control", placeholder = "Stop Name | latitude | longitude", aria_describedby = "stop-format" })
+                        <small id="stop-format" class="text-muted">Enter one stop per line. Coordinates are optional.</small>
+                        @Html.ValidationMessageFor(m => m.StopsText, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.PricePerSeat, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.PricePerSeat, new { @class = "form-control", type = "number", min = "1", step = "1", placeholder = "Enter price per seat in PKR", required = "required", inputmode = "numeric" })
+                        @Html.ValidationMessageFor(m => m.PricePerSeat, "", new { @class = "text-danger" })
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Publish Ride</button>
+                    <a class="btn btn-secondary ms-2" href="@Url.Action("Dashboard", "Driver")">Back</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

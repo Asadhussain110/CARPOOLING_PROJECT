@@ -1,0 +1,214 @@
+@using System
+@using System.Linq
+@using CARPOOLING_PROJECT.Models
+@using CARPOOLING_PROJECT.ViewModels
+@model CARPOOLING_PROJECT.ViewModels.PassengerDashboardViewModel
+@{
+    ViewBag.Title = "Passenger Dashboard";
+    var availableCount = Model.AvailableRides?.Count() ?? 0;
+    var bookingCount = Model.MyBookings?.Count() ?? 0;
+    var averagePrice = Model.AvailableRides.Any() ? Model.AvailableRides.Average(r => r.PricePerSeat) : 0;
+}
+
+<section class="dashboard-hero">
+    <div>
+        <span class="eyebrow-badge">Passenger Mode</span>
+        <h2 class="mb-1">Plan, ride, repeat.</h2>
+        <p class="mb-0">Browse curated rides in your city and keep track of journeys in one place.</p>
+    </div>
+    <div class="hero-metrics">
+        <div class="metric-card">
+            <span>Available Rides</span>
+            <strong>@availableCount</strong>
+        </div>
+        <div class="metric-card">
+            <span>My Bookings</span>
+            <strong>@bookingCount</strong>
+        </div>
+        <div class="metric-card">
+            <span>Avg Price / Seat</span>
+            <strong>@(averagePrice > 0 ? averagePrice.ToString("0") + " PKR" : "—")</strong>
+        </div>
+    </div>
+</section>
+
+<div class="glass-card mb-2">
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <div>
+            <h4 class="mb-1">Available Rides</h4>
+            <small class="text-muted">Jump into any active ride before the seats sell out.</small>
+        </div>
+        <span class="status-pill success">@availableCount options</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+                <caption>Live rides available for booking, including seats and stops.</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Route</th>
+                        <th scope="col">Driver</th>
+                        <th scope="col">Price/Seat</th>
+                        <th scope="col">Seats</th>
+                        <th scope="col">Current Location</th>
+                        <th scope="col">Start Time</th>
+                        <th scope="col">Stops</th>
+                        <th scope="col">Request</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.AvailableRides.Any())
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">No rides currently available. Check back soon for new routes.</div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var ride in Model.AvailableRides)
+                        {
+                            var stops = Model.StopsByRoute.ContainsKey(ride.RouteID) ? Model.StopsByRoute[ride.RouteID] : Enumerable.Empty<Stop>();
+                            <tr>
+                                <td>@(ViewModelDisplayHelper.CleanName(ride.Route?.Name) ?? "(unnamed route)")</td>
+                                <td>@(ViewModelDisplayHelper.CleanName(ride.Driver?.User?.Name) ?? ride.Driver?.User?.Email ?? "(no driver)")</td>
+                                <td>@ride.PricePerSeat.ToString("0") PKR</td>
+                                <td>@($"{ride.AvailableSeats}/{ride.TotalSeats}")</td>
+                                <td>
+                                    @if (ride.CurrentStopID.HasValue && Model.StopLookupById.ContainsKey(ride.CurrentStopID.Value))
+                                    {
+                                        <span class="status-pill warning">@Model.StopLookupById[ride.CurrentStopID.Value]</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">At Start</span>
+                                    }
+                                </td>
+                                <td>@ride.StartTime.ToString("g")</td>
+                                <td>
+                                    <div class="vertical-stops">
+                                        @foreach (var stop in stops)
+                                        {
+                                            <div class="stop-badge">@stop.LocationName</div>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("BookRide", "Passenger"))
+                                    {
+                                        @Html.Hidden("RideId", ride.RideID)
+                                        <div class="mb-1">
+                                            <input type="number" name="Seats" class="form-control" min="1" max="6" placeholder="Seats" required />
+                                        </div>
+                                        <div class="mb-1">
+                                            <input type="text" name="PickupStopName" class="form-control" placeholder="Pickup Stop" required />
+                                        </div>
+                                        <div class="mb-1">
+                                            <input type="text" name="DropStopName" class="form-control" placeholder="Drop Stop" required />
+                                        </div>
+                                        <button class="btn btn-primary w-100" type="submit">Request</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="glass-card mb-2">
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <div>
+            <h4 class="mb-1">My Bookings</h4>
+            <small class="text-muted">Manage every request, payment, and rating effortlessly.</small>
+        </div>
+        <span class="status-pill warning">@bookingCount active</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+                <caption>Your booking lifecycle, cancellation state, and rating actions.</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Ride</th>
+                        <th scope="col">Driver</th>
+                        <th scope="col">Seats</th>
+                        <th scope="col">Fare</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Payment</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.MyBookings.Any())
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">No bookings yet. Use the available rides table above to request your first trip.</div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var booking in Model.MyBookings)
+                        {
+                            var statusName = booking.BookingStatu?.StatusName ?? "Unknown";
+                            var rideStatus = booking.Ride?.RideStatu?.StatusName ?? "Unknown";
+                            var rideCancelled = rideStatus.Equals("Cancelled", StringComparison.OrdinalIgnoreCase);
+                            <tr>
+                                <td>@(ViewModelDisplayHelper.CleanName(booking.Ride?.Route?.Name) ?? "(unnamed route)")</td>
+                                <td>@(ViewModelDisplayHelper.CleanName(booking.Ride?.Driver?.User?.Name) ?? booking.Ride?.Driver?.User?.Email ?? "(no driver)")</td>
+                                <td>@booking.SeatsRequested</td>
+                                <td>@booking.Fare</td>
+                                <td>@statusName</td>
+                                <td>
+                                    @if (booking.PaymentConfirmed == true)
+                                    {
+                                        <span class="badge bg-success">Paid</span>
+                                    }
+                                    else if (rideCancelled)
+                                    {
+                                        <span class="badge bg-secondary">Cancelled</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Cash on delivery</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!rideCancelled && (statusName.Equals("Pending", StringComparison.OrdinalIgnoreCase) || statusName.Equals("Accepted", StringComparison.OrdinalIgnoreCase)))
+                                    {
+                                        using (Html.BeginForm("CancelBooking", "Passenger", new { id = booking.BookingID }, FormMethod.Post, new { @class = "d-inline" }))
+                                        {
+                                            <button class="btn btn-danger mb-1" type="submit" onclick="return confirm('Cancel this booking request?');">Cancel</button>
+                                        }
+                                    }
+                                    @if (statusName.Equals("Completed", StringComparison.OrdinalIgnoreCase) && booking.PaymentConfirmed == true)
+                                    {
+                                        using (Html.BeginForm("RateDriver", "Passenger", FormMethod.Post, new { @class = "d-inline" }))
+                                        {
+                                            <input type="hidden" name="BookingId" value="@booking.BookingID" />
+                                            <select name="Stars" class="form-select form-select-sm d-inline w-auto" aria-label="Rating stars">
+                                                <option value="5">5</option>
+                                                <option value="4">4</option>
+                                                <option value="3">3</option>
+                                                <option value="2">2</option>
+                                                <option value="1">1</option>
+                                            </select>
+                                            <input type="text" name="Feedback" class="form-control form-control-sm d-inline w-auto" placeholder="Feedback (optional)" />
+                                            <button class="btn btn-sm btn-outline-primary" type="submit">Rate</button>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
